@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.widget.Toast;
 
 import com.myself.mvcandroid.adapter.MyRvAdapter;
 import com.myself.mvcandroid.model.FakeData;
@@ -11,7 +12,7 @@ import com.myself.mvcandroid.model.FakeData;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MyRvAdapter.IOnClickItemListener {
     private List<FakeData> mFakeDataList = new ArrayList<>();
     private MyRvAdapter mMyRvAdapter;
     private RecyclerView mRv;
@@ -26,7 +27,7 @@ public class MainActivity extends AppCompatActivity {
 
     private void initRecycler() {
         mRv = findViewById(R.id.recycler_view);
-        mMyRvAdapter = new MyRvAdapter(mFakeDataList);
+        mMyRvAdapter = new MyRvAdapter(mFakeDataList, this);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         mRv.setLayoutManager(linearLayoutManager);
         mRv.setAdapter(mMyRvAdapter);
@@ -40,5 +41,10 @@ public class MainActivity extends AppCompatActivity {
         mFakeDataList.add(new FakeData("e", 5));
         mFakeDataList.add(new FakeData("f", 6));
         mFakeDataList.add(new FakeData("g", 7));
+    }
+
+    @Override
+    public void showToast(FakeData fakeData) {
+        Toast.makeText(this, String.valueOf(fakeData.getId()), Toast.LENGTH_LONG).show();
     }
 }

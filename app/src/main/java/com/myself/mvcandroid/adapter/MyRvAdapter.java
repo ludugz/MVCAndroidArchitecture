@@ -19,9 +19,11 @@ import java.util.List;
 public class MyRvAdapter extends RecyclerView.Adapter<MyRvAdapter.MyViewHolder> {
 
     private List<FakeData> mFakeDataList;
+    private IOnClickItemListener mIOnClickItemListener;
 
-    public MyRvAdapter(List<FakeData> fakeDataList) {
+    public MyRvAdapter(List<FakeData> fakeDataList, IOnClickItemListener iOnClickItemListener) {
         this.mFakeDataList = fakeDataList;
+        this.mIOnClickItemListener = iOnClickItemListener;
     }
 
     @NonNull
@@ -32,9 +34,15 @@ public class MyRvAdapter extends RecyclerView.Adapter<MyRvAdapter.MyViewHolder> 
     }
 
     @Override
-    public void onBindViewHolder(@NonNull MyViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull MyViewHolder holder, final int position) {
         holder.mTitle.setText(mFakeDataList.get(position).getTitle());
         holder.mId.setText(String.valueOf(mFakeDataList.get(position).getId()));
+        holder.mContainer.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mIOnClickItemListener.showToast(mFakeDataList.get(position));
+            }
+        });
     }
 
     @Override
@@ -45,13 +53,18 @@ public class MyRvAdapter extends RecyclerView.Adapter<MyRvAdapter.MyViewHolder> 
     protected class MyViewHolder extends RecyclerView.ViewHolder {
         private TextView mTitle;
         private TextView mId;
+        private View mContainer;
 
         public MyViewHolder(View itemView) {
             super(itemView);
             mTitle = itemView.findViewById(R.id.tv_title);
             mId = itemView.findViewById(R.id.tv_id);
+            mContainer = itemView.findViewById(R.id.item_container);
         }
     }
 
+    public interface IOnClickItemListener {
+        void showToast(FakeData fakeData);
+    }
 }
 
