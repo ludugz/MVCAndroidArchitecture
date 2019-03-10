@@ -1,0 +1,1 @@
+A self-made tutorial about MVC in Android Structure (3/10/2019)
