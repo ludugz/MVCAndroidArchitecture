@@ -4,11 +4,11 @@ package com.myself.mvcandroid.model;
  * Created by admin on 3/10/2019.
  */
 
-public class FakeData {
+public class Data {
     private String mTitle;
     private int mId;
 
-    public FakeData(String mTitle, int mId) {
+    public Data(String mTitle, int mId) {
         this.mTitle = mTitle;
         this.mId = mId;
     }
