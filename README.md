@@ -1,7 +1,11 @@
 MVC structure in Android Development 
 ===================================
 
-```java public class ListActivity extends BaseActivity implements ListViewMvcImpl.Listener {
+
+MainActivity:
+
+```java 
+public class ListActivity extends BaseActivity implements ListViewMvcImpl.Listener {
     private List<Data> mDataList = new ArrayList<>();
     private ListViewMvc mViewMvc;
 
@@ -20,29 +24,50 @@ MVC structure in Android Development
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         initFakeData();
-
         mViewMvc = new ListViewMvcImpl(LayoutInflater.from(this),null);
         mViewMvc.registerListener(this);
         setContentView(mViewMvc.getRootView());
     }
 ```
 
-Then generate a path in your code :
-
+ViewMvc:
 ```java
-ShapeOfView shapeOfView = findViewById(R.id.myShape)
-shapeOfView.setClipPathCreator(new ClipPathManager.ClipPathCreator() {
-       @Override
-       public Path createClipPath(int width, int height) {
-           final Path path = new Path();
+interface ListViewMvc extends ObservableViewMvc<ListViewMvc.Listener> {
 
-            //eg: triangle
-           path.moveTo(0, 0);
-           path.lineTo(0.5 * width, height);
-           path.lineTo(width, 0);
-           path.close();
+    public interface Listener {
+        void onDataClicked(Data data);
+    }
 
-           return path;
-       }
-});
+    void bindDatas(List<Data> datas);
+
+}
+```
+
+ViewMvcImp:
+```java
+public class ListItemViewMvcImpl extends BaseObservableViewMvc<ListItemViewMvc.Listener>
+        implements ListItemViewMvc {
+
+    private final TextView mTxtTitle;
+    private Data mData;
+
+    public ListItemViewMvcImpl(LayoutInflater inflater, @Nullable ViewGroup parent) {
+        setRootView(inflater.inflate(R.layout.layout_question_list_item, parent, false));
+        mTxtTitle = findViewById(R.id.txt_title);
+        getRootView().setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                for (Listener listener : getListeners()) {
+                    listener.onDataClicked(mData);
+                }
+            }
+        });
+    }
+
+    @Override
+    public void bindData(Data data) {
+        mData = data;
+        mTxtTitle.setText(data.getTitle());
+    }
+}
 ```
